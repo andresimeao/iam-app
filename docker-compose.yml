@@ -1,0 +1,82 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - './:/var/www/html'
+    depends_on:
+      - mysql
+      - redis
+      - node
+    networks:
+      - sail
+    entrypoint:
+      - /usr/local/bin/entrypoint.sh
+
+  nginx:
+    image: 'nginx:alpine'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    volumes:
+      - './:/var/www/html'
+      - './docker/nginx/:/etc/nginx/conf.d/'
+    networks:
+      - sail
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-userpass}
+      MYSQL_USER: ${DB_USERNAME:-username}
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - sail
+
+  redis:
+    image: 'redis:alpine'
+    networks:
+      - sail
+    volumes:
+      - 'sail-redis:/data'
+    command:
+      - redis-server
+      - '--appendonly'
+      - 'yes'
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  node:
+    image: node:14
+    working_dir: /var/www/html
+    volumes:
+      - './:/var/www/html'
+    command: sh -c "npm install && tail -f /dev/null"
+    networks:
+      - sail
+
+volumes:
+  sail-redis:
+    driver: local
+  mysql-data:
+    driver: local
+
+networks:
+  sail:
+    driver: bridge
