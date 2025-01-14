@@ -12,14 +12,14 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-home-circle"></i>
-                        <span key="t-dashboards">@lang('translation.Dashboards')</span>
+                        <span key="t-dashboards">Home</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="index" key="t-default">@lang('translation.Default')</a></li>
                     </ul>
                 </li>
 
-                <li>
+                {{-- <li>
                     <a href="javascript: void(0);" class="waves-effect">
                     <span class="badge rounded-pill bg-danger float-end" key="t-hot">@lang('translation.hot')</span>
                         <i class="bx bx-layout"></i>
@@ -141,7 +141,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
 
             </ul>
         </div>
