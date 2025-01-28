@@ -19,6 +19,13 @@
                     </ul>
                 </li>
 
+                <li>
+                    <a href="{{reoute('member')}}" class="waves-effect">
+                        <i class="bx bx-list-ul"></i>
+                        <span key="t-yajra-datatable">Membros</span>
+                    </a>
+                </li>
+
                 {{-- <li>
                     <a href="javascript: void(0);" class="waves-effect">
                     <span class="badge rounded-pill bg-danger float-end" key="t-hot">@lang('translation.hot')</span>
